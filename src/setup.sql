@@ -216,3 +216,90 @@ FROM service_project sp
 INNER JOIN organization o
     ON sp.organization_id = o.organization_id
 ORDER BY sp.project_date, sp.title;
+
+-- ========================================
+-- Category Table
+-- ========================================
+
+CREATE TABLE IF NOT EXISTS category (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+-- ========================================
+-- Service Project Category Join Table
+-- ========================================
+
+CREATE TABLE IF NOT EXISTS service_project_category (
+    project_id INTEGER NOT NULL REFERENCES service_project(project_id) ON DELETE CASCADE,
+    category_id INTEGER NOT NULL REFERENCES category(category_id) ON DELETE CASCADE,
+    PRIMARY KEY (project_id, category_id)
+);
+
+-- ========================================
+-- Insert Sample Category Data
+-- ========================================
+
+INSERT INTO category (name)
+VALUES
+    ('Environmental'),
+    ('Educational'),
+    ('Community Service'),
+    ('Health and Wellness')
+ON CONFLICT (name) DO NOTHING;
+
+-- ========================================
+-- Associate Service Projects with Categories
+-- ========================================
+
+INSERT INTO service_project_category (
+    project_id,
+    category_id
+)
+SELECT sp.project_id, c.category_id
+FROM (
+    VALUES
+    ('Neighborhood Ramp Build', 'Community Service'),
+    ('Community Center Painting', 'Community Service'),
+    ('School Garden Boxes', 'Educational'),
+    ('School Garden Boxes', 'Environmental'),
+    ('Home Repair Day', 'Community Service'),
+    ('Park Bench Installation', 'Environmental'),
+    ('Park Bench Installation', 'Community Service'),
+    ('Urban Farm Planting', 'Environmental'),
+    ('Compost Education Booth', 'Educational'),
+    ('Compost Education Booth', 'Environmental'),
+    ('Food Pantry Harvest', 'Community Service'),
+    ('Food Pantry Harvest', 'Health and Wellness'),
+    ('Pollinator Garden Cleanup', 'Environmental'),
+    ('Seedling Workshop', 'Educational'),
+    ('Seedling Workshop', 'Environmental'),
+    ('Weekend Food Drive', 'Community Service'),
+    ('Weekend Food Drive', 'Health and Wellness'),
+    ('Community Tutoring Night', 'Educational'),
+    ('Health Kit Assembly', 'Health and Wellness'),
+    ('Health Kit Assembly', 'Community Service'),
+    ('Senior Tech Help', 'Educational'),
+    ('Senior Tech Help', 'Community Service'),
+    ('Back-to-School Supply Sort', 'Educational'),
+    ('Back-to-School Supply Sort', 'Community Service')
+) AS sample_project_categories (
+    project_title,
+    category_name
+)
+INNER JOIN service_project sp
+    ON sp.title = sample_project_categories.project_title
+INNER JOIN category c
+    ON c.name = sample_project_categories.category_name
+ON CONFLICT (project_id, category_id) DO NOTHING;
+
+-- Verify category data and service project relationships.
+SELECT
+    c.category_id,
+    c.name AS category_name,
+    COUNT(spc.project_id) AS project_count
+FROM category c
+LEFT JOIN service_project_category spc
+    ON c.category_id = spc.category_id
+GROUP BY c.category_id, c.name
+ORDER BY c.name;
