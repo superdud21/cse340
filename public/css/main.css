@@ -160,6 +160,25 @@ main li img {
     overflow-wrap: anywhere;
 }
 
+.project-item {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.project-item strong {
+    color: var(--color-primary-dark);
+    font-size: 1.05rem;
+}
+
+.project-item p {
+    margin: 0;
+}
+
+.project-item span {
+    color: var(--color-muted);
+    font-weight: 700;
+}
+
 .category-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
 }
