@@ -134,6 +134,32 @@ main li img {
     padding: 0.35rem;
 }
 
+.organization-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.organization-details {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.organization-details strong {
+    color: var(--color-primary-dark);
+    font-size: 1.1rem;
+}
+
+.organization-details p {
+    margin: 0;
+}
+
+.organization-details a {
+    color: var(--color-primary);
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
 .category-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -184,6 +210,10 @@ footer p {
     main li img {
         display: block;
         margin: 0 0 0.75rem;
+    }
+
+    .organization-item {
+        display: block;
     }
 
     .category-list {
